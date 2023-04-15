@@ -61,37 +61,35 @@ public class GinRunner {
 	}
 
 	private static void processFiles() throws IOException {
-		final PrintStream outFile = new PrintStream(new FileOutputStream(OUTPUT_FILE_NAME));
+		try (PrintStream outFile = new PrintStream(new FileOutputStream(OUTPUT_FILE_NAME))) {
 
-		List<String> methods = Files.readAllLines(new File(METHOD_LIST_FILE_NAME).toPath());
+			List<String> methods = Files.readAllLines(new File(METHOD_LIST_FILE_NAME).toPath());
 
-		// Header line
-		outFile.println("method," + "surfaceIfs,nestedIfs," + "surfaceSwitches,nestedSwitches,"
-				+ "surfaceFors,nestedFors," + "surfaceForEachs,nestedForEachs," + "surfaceWhiles,nestedWhiles,"
-				+ "surfaceDos,nestedDos," + "iterativeStmts,conditionalStmts");
+			// Header line
+			outFile.println("method," + "surfaceIfs,nestedIfs," + "surfaceSwitches,nestedSwitches,"
+					+ "surfaceFors,nestedFors," + "surfaceForEachs,nestedForEachs," + "surfaceWhiles,nestedWhiles,"
+					+ "surfaceDos,nestedDos," + "iterativeStmts,conditionalStmts");
 
-		for (String method : methods) {
-			Logger.info("Processing method {}", method);
+			for (String method : methods) {
+				Logger.info("Processing method {}", method);
 
-			int projectIndex = getProjectIndex(method);
+				int projectIndex = getProjectIndex(method);
 
-			String methodFqNameMinusArgs = method.substring(0, method.lastIndexOf("("));
+				String methodFqNameMinusArgs = method.substring(0, method.lastIndexOf("("));
 
-			String className = projectPaths[projectIndex]
-					+ methodFqNameMinusArgs.substring(0, methodFqNameMinusArgs.lastIndexOf(".")).replace(".", "/")
-					+ ".java";
+				String className = projectPaths[projectIndex]
+						+ methodFqNameMinusArgs.substring(0, methodFqNameMinusArgs.lastIndexOf(".")).replace(".", "/")
+						+ ".java";
 
-			int[] metrics = computeMetrics(className, method);
+				int[] metrics = computeMetrics(className, method);
 
-			Logger.info("Writing metrics to file...");
+				Logger.info("Writing metrics to file...");
 
-			outFile.printf("\"%s\",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n", method, metrics[0], metrics[1],
-					metrics[2], metrics[3], metrics[4], metrics[5], metrics[6], metrics[7], metrics[8], metrics[9],
-					metrics[10], metrics[11], metrics[12], metrics[13]);
+				outFile.printf("\"%s\",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n", method, metrics[0], metrics[1],
+						metrics[2], metrics[3], metrics[4], metrics[5], metrics[6], metrics[7], metrics[8], metrics[9],
+						metrics[10], metrics[11], metrics[12], metrics[13]);
+			}
 		}
-
-		outFile.close();
-
 	}
 
 	private static int[] computeMetrics(String sourceFile, String method) throws FileNotFoundException {
