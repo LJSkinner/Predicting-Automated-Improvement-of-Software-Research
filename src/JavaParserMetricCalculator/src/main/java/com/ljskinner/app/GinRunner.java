@@ -51,7 +51,7 @@ public class GinRunner {
 		try {
 			processFiles();
 		} catch (FileNotFoundException fnfe) {
-			Logger.error("There was a problem with creating the file, please review the message:\n{}",
+			Logger.error("There was a problem with creating the file, please review the message: {}",
 					fnfe.getMessage());
 		} catch (IOException e) {
 			Logger.error(
