@@ -33,16 +33,16 @@ public class GinRunner {
 			"junit", "ibatis", "opennlp", "spark", "spatial4j" };
 
 	private static final String[] projectPaths = new String[] {
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\arthas\\core\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\disruptor\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\druid\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\gson\\gson\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\jcodec\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\junit4\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\mybatis-3\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\opennlp\\opennlp-tools\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\spark\\src\\main\\java\\",
-			"D:\\OneDrive\\College\\Year 4\\CSCU9Z7 - Computing Science Project\\casestudies\\spatial4j\\src\\main\\java\\" };
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/arthas/core/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/disruptor/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/druidsrc/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/gson/gson/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/jcodec/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/junit4/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/mybatis-3/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/opennlp/opennlp-tools/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/spark/src/main/java/",
+			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/spatial4j/src/main/java/" };
 
 	/**
 	 * @param args
