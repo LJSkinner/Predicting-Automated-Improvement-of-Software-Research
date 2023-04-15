@@ -35,7 +35,7 @@ public class GinRunner {
 	private static final String[] projectPaths = new String[] {
 			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/arthas/core/src/main/java/",
 			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/disruptor/src/main/java/",
-			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/druidsrc/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/druid/src/main/java/",
 			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/gson/gson/src/main/java/",
 			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/jcodec/src/main/java/",
 			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/junit4/src/main/java/",
