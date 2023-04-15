@@ -20,7 +20,7 @@ import org.tinylog.Logger;
  * running it over open source projects which have been used in Gin.
  * 
  * 
- * @author Luke Skinner (2727141)
+ * @author Luke Skinner
  *
  */
 public class GinRunner {
