@@ -1,0 +1,33 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.log
+/target/
+bin/
+build/
+dist/
+.gradle/
+.idea/
+.vscode/
+.settings/
+.project
+.classpath
+.m2/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg-info/
+*.egg
+*.log
+*.swp
+
+/casestudies
