@@ -25,7 +25,7 @@ import org.tinylog.Logger;
  */
 public class GinRunner {
 
-	private static final String METHOD_LIST_FILE_NAME = "MethodList.txt";
+	private static final String METHOD_LIST_FILE_PATH = "/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/src/JavaParserMetricCalculator/src/main/resources/MethodList.txt";
 
 	private static final String OUTPUT_FILE_NAME = "StatsFromJavaParser.csv";
 
@@ -33,16 +33,16 @@ public class GinRunner {
 			"junit", "ibatis", "opennlp", "spark", "spatial4j" };
 
 	private static final String[] projectPaths = new String[] {
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/arthas/core/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/disruptor/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/druidsrc/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/gson/gson/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/jcodec/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/junit4/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/mybatis-3/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/opennlp/opennlp-tools/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/spark/src/main/java/",
-			"~/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/spatial4j/src/main/java/" };
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/arthas/core/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/disruptor/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/druidsrc/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/gson/gson/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/jcodec/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/junit4/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/mybatis-3/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/opennlp/opennlp-tools/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/spark/src/main/java/",
+			"/home/valla/Development/Python/MachineLearning/Predicting-Automated-Improvement-of-Software-Research/casestudies/spatial4j/src/main/java/" };
 
 	/**
 	 * @param args
@@ -56,14 +56,14 @@ public class GinRunner {
 		} catch (IOException e) {
 			Logger.error(
 					"An I/O error occured when attempting to read from the file, please review the message: {}",
-					e.getMessage());
+					e.getLocalizedMessage());
 		}
 	}
 
 	private static void processFiles() throws IOException {
 		try (PrintStream outFile = new PrintStream(new FileOutputStream(OUTPUT_FILE_NAME))) {
 
-			List<String> methods = Files.readAllLines(new File(METHOD_LIST_FILE_NAME).toPath());
+			List<String> methods = Files.readAllLines(new File(METHOD_LIST_FILE_PATH).toPath());
 
 			// Header line
 			outFile.println("method," + "surfaceIfs,nestedIfs," + "surfaceSwitches,nestedSwitches,"
