@@ -213,7 +213,9 @@ public class JPExtractor {
 	public int numberOfNestedSwitchIn(String methodName) {
 		int numNestedSwitches = 0;
 
-		List<Statement> statements = compilationUnit.findAll(Statement.class);
+		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
+
+		List<Statement> statements = methodDeclaration.findAll(Statement.class);
 
 		for (Statement statement : statements) {
 			List<Node> children = statement.getChildNodes();
