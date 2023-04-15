@@ -24,9 +24,9 @@ import com.ljskinner.jputils.JPExtractor;
  */
 public class GinRunner {
 
-	private static final String methodList = "AllMethods3.txt";
+	private static final String METHOD_LIST_FILE_NAME = "MethodList.txt";
 
-	private static final String outputFileName = "StatsFromJavaParser.csv";
+	private static final String OUTPUT_FILE_NAME = "StatsFromJavaParser.csv";
 
 	private static final String[] githubProjects = new String[] { "arthas", "disruptor", "druid", "gson", "jcodec",
 			"junit", "ibatis", "opennlp", "spark", "spatial4j" };
@@ -60,9 +60,9 @@ public class GinRunner {
 	}
 
 	private static void processFiles() throws IOException {
-		final PrintStream outFile = new PrintStream(new FileOutputStream(outputFileName));
+		final PrintStream outFile = new PrintStream(new FileOutputStream(OUTPUT_FILE_NAME));
 
-		List<String> methods = Files.readAllLines(new File(methodList).toPath());
+		List<String> methods = Files.readAllLines(new File(METHOD_LIST_FILE_NAME).toPath());
 
 		// Header line
 		outFile.println("method," + "surfaceIfs,nestedIfs," + "surfaceSwitches,nestedSwitches,"
