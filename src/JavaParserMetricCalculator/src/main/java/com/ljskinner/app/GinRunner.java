@@ -9,10 +9,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import com.ljskinner.jputils.JPExtractor;
+
+import org.tinylog.Logger;
 
 /**
  * This class is responsible for utilising the JavaParser metric extractor and
@@ -50,11 +51,11 @@ public class GinRunner {
 		try {
 			processFiles();
 		} catch (FileNotFoundException fnfe) {
-			System.err.printf("There was a problem with creating the file, please review the message:%n%s",
+			Logger.error("There was a problem with creating the file, please review the message:\n{}",
 					fnfe.getMessage());
 		} catch (IOException e) {
-			System.err.printf(
-					"An I/O error occured when attempting to read from the file, please review the message:%n%s",
+			Logger.error(
+					"An I/O error occured when attempting to read from the file, please review the message: {}",
 					e.getMessage());
 		}
 	}
@@ -70,7 +71,7 @@ public class GinRunner {
 				+ "surfaceDos,nestedDos," + "iterativeStmts,conditionalStmts");
 
 		for (String method : methods) {
-			System.out.println("Processing method " + method);
+			Logger.info("Processing method {}", method);
 
 			int projectIndex = getProjectIndex(method);
 
@@ -81,6 +82,8 @@ public class GinRunner {
 					+ ".java";
 
 			int[] metrics = computeMetrics(className, method);
+
+			Logger.info("Writing metrics to file...");
 
 			outFile.printf("\"%s\",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n", method, metrics[0], metrics[1],
 					metrics[2], metrics[3], metrics[4], metrics[5], metrics[6], metrics[7], metrics[8], metrics[9],
@@ -95,8 +98,7 @@ public class GinRunner {
 		JPExtractor jpExtractor = new JPExtractor(sourceFile);
 
 		if (!jpExtractor.hasMethod(method)) {
-			throw new InputMismatchException(
-					"ERROR: Could not find the supplied method, something has went wrong internally. Please review Casestudies folder and source files");
+			Logger.warn("The method {} could not be found in the source file {}. Metrics will be 0 for this method", method, sourceFile);
 		}
 
 		int surfaceIfs = jpExtractor.numberOfSurfaceIfIn(method);
