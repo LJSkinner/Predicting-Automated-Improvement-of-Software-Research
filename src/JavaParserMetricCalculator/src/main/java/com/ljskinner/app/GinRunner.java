@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.util.List;
 
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.ljskinner.jputils.JPExtractor;
 
 import org.tinylog.Logger;
@@ -92,36 +93,38 @@ public class GinRunner {
 		}
 	}
 
-	private static int[] computeMetrics(String sourceFile, String method) throws FileNotFoundException {
+	private static int[] computeMetrics(String sourceFile, String methodName) throws FileNotFoundException {
 		JPExtractor jpExtractor = new JPExtractor(sourceFile);
 
-		if (!jpExtractor.hasMethod(method)) {
-			Logger.warn("The method {} could not be found in the source file {}. Metrics will be 0 for this method", method, sourceFile);
+		MethodDeclaration currentMethodDeclarationNode = jpExtractor.findMethodDeclarationNode(methodName);
+
+		if (currentMethodDeclarationNode.getParentNode().isEmpty()) {
+			Logger.warn("The method {} could not be found in the source file {}. Metrics will be 0 for this method", methodName, sourceFile);
 		}
 
-		int surfaceIfs = jpExtractor.numberOfSurfaceIfIn(method);
+		int surfaceIfs = jpExtractor.numberOfSurfaceIfIn(currentMethodDeclarationNode);
 
-		int nestedIfs = jpExtractor.numberOfNestedIfIn(method);
+		int nestedIfs = jpExtractor.numberOfNestedIfIn(currentMethodDeclarationNode);
 
-		int surfaceSwitches = jpExtractor.numberOfSurfaceSwitchIn(method);
+		int surfaceSwitches = jpExtractor.numberOfSurfaceSwitchIn(currentMethodDeclarationNode);
 
-		int nestedSwitches = jpExtractor.numberOfNestedSwitchIn(method);
+		int nestedSwitches = jpExtractor.numberOfNestedSwitchIn(currentMethodDeclarationNode);
 
-		int surfaceFors = jpExtractor.numberOfSurfaceForIn(method);
+		int surfaceFors = jpExtractor.numberOfSurfaceForIn(currentMethodDeclarationNode);
 
-		int nestedFors = jpExtractor.numberOfNestedForIn(method);
+		int nestedFors = jpExtractor.numberOfNestedForIn(currentMethodDeclarationNode);
 
-		int surfaceForEachs = jpExtractor.numberOfSurfaceForEachIn(method);
+		int surfaceForEachs = jpExtractor.numberOfSurfaceForEachIn(currentMethodDeclarationNode);
 
-		int nestedForEachs = jpExtractor.numberOfNestedForEachIn(method);
+		int nestedForEachs = jpExtractor.numberOfNestedForEachIn(currentMethodDeclarationNode);
 
-		int surfaceWhiles = jpExtractor.numberOfSurfaceWhileIn(method);
+		int surfaceWhiles = jpExtractor.numberOfSurfaceWhileIn(currentMethodDeclarationNode);
 
-		int nestedWhiles = jpExtractor.numberOfNestedWhileIn(method);
+		int nestedWhiles = jpExtractor.numberOfNestedWhileIn(currentMethodDeclarationNode);
 
-		int surfaceDos = jpExtractor.numberOfSurfaceDoIn(method);
+		int surfaceDos = jpExtractor.numberOfSurfaceDoIn(currentMethodDeclarationNode);
 
-		int nestedDos = jpExtractor.numberOfNestedDoIn(method);
+		int nestedDos = jpExtractor.numberOfNestedDoIn(currentMethodDeclarationNode);
 
 		int iterativeStmts = surfaceFors + nestedFors + surfaceForEachs + nestedForEachs + surfaceWhiles + nestedWhiles
 				+ surfaceDos + nestedDos;
