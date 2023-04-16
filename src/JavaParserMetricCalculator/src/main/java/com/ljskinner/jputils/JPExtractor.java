@@ -7,6 +7,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.*;
 
 
@@ -556,6 +557,23 @@ public class JPExtractor {
 		}
 
 		return numberSurfaceForEach;
+	}
+
+	/**
+	 * This method will return the number of method calls inside the provided method. Note
+	 * that this does not differentiate between recursive and other function calls. It is the total.
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @return The number of total method calls in the provided method
+	 */
+	public int numberOfMethodCallsIn(MethodDeclaration methodDeclaration) {
+		return methodDeclaration.findAll(MethodCallExpr.class).size();
 	}
 
 	/**
