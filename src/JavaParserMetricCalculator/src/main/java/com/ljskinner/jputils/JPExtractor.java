@@ -15,9 +15,11 @@ import com.github.javaparser.ast.stmt.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.Objects;
-import java.util.NoSuchElementException;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * This class is a wrapper for JavaParser and is responsible for the main work
@@ -644,7 +646,7 @@ public class JPExtractor {
 
 		List<BinaryExpr> binaryExprs = methodDeclaration.findAll(BinaryExpr.class);
 
-		for(BinaryExpr binaryExpr : binaryExprs) {
+		for (BinaryExpr binaryExpr : binaryExprs) {
 			boolean isComparisonOperator = binaryExpr.getOperator() == BinaryExpr.Operator.GREATER ||
 					                       binaryExpr.getOperator() == BinaryExpr.Operator.GREATER_EQUALS ||
 					                       binaryExpr.getOperator() == BinaryExpr.Operator.LESS ||
@@ -652,7 +654,7 @@ public class JPExtractor {
 					                       binaryExpr.getOperator() == BinaryExpr.Operator.EQUALS ||
 					                       binaryExpr.getOperator() == BinaryExpr.Operator.NOT_EQUALS;
 
-			if(isComparisonOperator) {
+			if (isComparisonOperator) {
 				numComparisonOperators++;
 			}
 		}
@@ -678,14 +680,14 @@ public class JPExtractor {
 
 		List<BinaryExpr> binaryExprs = methodDeclaration.findAll(BinaryExpr.class);
 
-		for(BinaryExpr binaryExpr : binaryExprs) {
+		for (BinaryExpr binaryExpr : binaryExprs) {
 			boolean isNumericalOperator = binaryExpr.getOperator() == BinaryExpr.Operator.PLUS ||
 					                      binaryExpr.getOperator() == BinaryExpr.Operator.MINUS ||
 					                      binaryExpr.getOperator() == BinaryExpr.Operator.MULTIPLY ||
 					                      binaryExpr.getOperator() == BinaryExpr.Operator.DIVIDE ||
 					                      binaryExpr.getOperator() == BinaryExpr.Operator.REMAINDER;
 
-			if(isNumericalOperator) {
+			if (isNumericalOperator) {
 				numNumericalOperators++;
 			}
 		}
