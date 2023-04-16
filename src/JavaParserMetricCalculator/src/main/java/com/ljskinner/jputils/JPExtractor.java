@@ -660,6 +660,39 @@ public class JPExtractor {
 	}
 
 	/**
+	 * This method will return the number of numerical operators in the provided method.
+	 * This will count +, -, *, /  and %.
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @return The number of numerical operators (+, -, *, / and %) in the provided method
+	 */
+	public int numberOfNumericalOperatorsIn(MethodDeclaration methodDeclaration) {
+		int numNumericalOperators = 0;
+
+		List<BinaryExpr> binaryExprs = methodDeclaration.findAll(BinaryExpr.class);
+
+		for(BinaryExpr binaryExpr : binaryExprs) {
+			boolean isNumericalOperator = binaryExpr.getOperator() == BinaryExpr.Operator.PLUS ||
+					                      binaryExpr.getOperator() == BinaryExpr.Operator.MINUS ||
+					                      binaryExpr.getOperator() == BinaryExpr.Operator.MULTIPLY ||
+					                      binaryExpr.getOperator() == BinaryExpr.Operator.DIVIDE ||
+					                      binaryExpr.getOperator() == BinaryExpr.Operator.REMAINDER;
+
+			if(isNumericalOperator) {
+				numNumericalOperators++;
+			}
+		}
+
+		return numNumericalOperators;
+	}
+
+	/**
 	 * 
 	 * This method will return the number of all which match the specified type, so
 	 * long as it extends JavaParser's Node class.
