@@ -8,6 +8,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.*;
 
 
@@ -574,6 +575,22 @@ public class JPExtractor {
 	 */
 	public int numberOfMethodCallsIn(MethodDeclaration methodDeclaration) {
 		return methodDeclaration.findAll(MethodCallExpr.class).size();
+	}
+
+	/**
+	 * This method will return the number of local variables inside the provided method.
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @return The number of local variables in the provided method
+	 */
+	public int numberOfLocalVariablesIn(MethodDeclaration methodDeclaration) {
+		return methodDeclaration.findAll(VariableDeclarationExpr.class).size();
 	}
 
 	/**
