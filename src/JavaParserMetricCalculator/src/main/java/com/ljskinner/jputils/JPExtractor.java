@@ -3,23 +3,16 @@
  */
 package com.ljskinner.jputils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Objects;
-
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.DoStmt;
-import com.github.javaparser.ast.stmt.ForEachStmt;
-import com.github.javaparser.ast.stmt.ForStmt;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.stmt.SwitchStmt;
-import com.github.javaparser.ast.stmt.WhileStmt;
+import com.github.javaparser.ast.stmt.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * This class is a wrapper for JavaParser and is responsible for the main work
@@ -140,28 +133,27 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<IfStmt> ifStmts = methodDeclaration.findAll(IfStmt.class);
 
-		for (Statement statement : statements) {
-			List<Node> children = statement.getChildNodes();
+		for (IfStmt ifStmt : ifStmts) {
+			Node parent = ifStmt.getParentNode().orElseThrow();
 
-			for (Node child : children) {
-				if (child instanceof BlockStmt) {
-					List<Node> blockChildren = child.getChildNodes();
-
-					for (Node blockChild : blockChildren) {
-
-						if (blockChild instanceof IfStmt) {
-							numNestedIfs++;
-						}
-					}
-				}
-
+			// JavaParser treats else statements as IfStmts, I.E there is no ElseStmt class.
+			// We want to ignore the paths for the sake of this metric.
+			if(parent instanceof IfStmt) {
+				continue;
 			}
+
+			Node nodeAboveIf = parent.getParentNode().orElseThrow();
+
+			// We say a statement is nested if the node above it is not the method declaration
+			if (!(nodeAboveIf instanceof MethodDeclaration)) {
+				numNestedIfs++;
+			}
+
 		}
 
 		return numNestedIfs;
-
 	}
 
 	/**
@@ -177,29 +169,19 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<IfStmt> ifStmts = methodDeclaration.findAll(IfStmt.class);
 
+		for (IfStmt ifStmt : ifStmts) {
+			Node parent = ifStmt.getParentNode().orElseThrow();
 
-		for (Statement statement : statements) {
-			if (statement instanceof IfStmt) {
+			Node nodeAboveIf = parent.getParentNode().orElseThrow();
 
-				IfStmt ifStmt = (IfStmt) statement;
-
-				Node parentOfIf = ifStmt.getParentNode().get();
-
-				if (parentOfIf instanceof BlockStmt) {
-					Node parentOfBlock = parentOfIf.getParentNode().get();
-
-					if (parentOfBlock instanceof MethodDeclaration) {
-						numberSurfaceIfs++;
-					}
-				}
-
+			if (nodeAboveIf instanceof MethodDeclaration) {
+				numberSurfaceIfs++;
 			}
 		}
 
 		return numberSurfaceIfs;
-
 	}
 
 	/**
@@ -215,23 +197,16 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<SwitchStmt> switchStmts = methodDeclaration.findAll(SwitchStmt.class);
 
-		for (Statement statement : statements) {
-			List<Node> children = statement.getChildNodes();
+		for (SwitchStmt switchStmt : switchStmts) {
+			Node parent = switchStmt.getParentNode().orElseThrow();
 
-			for (Node child : children) {
-				if (child instanceof BlockStmt) {
-					List<Node> blockChildren = child.getChildNodes();
+			Node nodeAboveSwitch = parent.getParentNode().orElseThrow();
 
-					for (Node blockChild : blockChildren) {
-
-						if (blockChild instanceof SwitchStmt) {
-							numNestedSwitches++;
-						}
-					}
-				}
-
+			// We say a statement is nested if the node above it is not the method declaration
+			if (!(nodeAboveSwitch instanceof MethodDeclaration)) {
+				numNestedSwitches++;
 			}
 		}
 
@@ -251,23 +226,15 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<SwitchStmt> switchStmts = methodDeclaration.findAll(SwitchStmt.class);
 
-		for (Statement statement : statements) {
-			if (statement instanceof SwitchStmt) {
+		for (SwitchStmt switchStmt : switchStmts) {
+			Node parent = switchStmt.getParentNode().orElseThrow();
 
-				SwitchStmt switchStmt = (SwitchStmt) statement;
+			Node nodeAboveSwitch = parent.getParentNode().orElseThrow();
 
-				Node parentOfSwitch = switchStmt.getParentNode().get();
-
-				if (parentOfSwitch instanceof BlockStmt) {
-					Node parentOfBlock = parentOfSwitch.getParentNode().get();
-
-					if (parentOfBlock instanceof MethodDeclaration) {
-						numberSurfaceSwitches++;
-					}
-				}
-
+			if (nodeAboveSwitch instanceof MethodDeclaration) {
+				numberSurfaceSwitches++;
 			}
 		}
 
@@ -287,27 +254,48 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<WhileStmt> whileStmts = methodDeclaration.findAll(WhileStmt.class);
 
-		for (Statement statement : statements) {
-			List<Node> children = statement.getChildNodes();
+		for (WhileStmt whileStmt : whileStmts) {
+			Node parent = whileStmt.getParentNode().orElseThrow();
 
-			for (Node child : children) {
-				if (child instanceof BlockStmt) {
-					List<Node> blockChildren = child.getChildNodes();
+			Node nodeAboveWhile = parent.getParentNode().orElseThrow();
 
-					for (Node blockChild : blockChildren) {
-
-						if (blockChild instanceof WhileStmt) {
-							numNestedWhiles++;
-						}
-					}
-				}
-
+			// We say a statement is nested if the node above it is not the method declaration
+			if (!(nodeAboveWhile instanceof MethodDeclaration)) {
+				numNestedWhiles++;
 			}
 		}
 
 		return numNestedWhiles;
+	}
+
+	/**
+	 * This method will return the number of surface whiles which are contained
+	 * within in a given method which is contained within the source file.
+	 *
+	 * @param methodName
+	 *
+	 * @return The number of surface whiles contained in the source file
+	 */
+	public int numberOfSurfaceWhileIn(String methodName) {
+		int numberSurfaceWhiles = 0;
+
+		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
+
+		List<WhileStmt> whileStmts = methodDeclaration.findAll(WhileStmt.class);
+
+		for (WhileStmt whileStmt : whileStmts) {
+			Node parent = whileStmt.getParentNode().orElseThrow();
+
+			Node nodeAboveWhile = parent.getParentNode().orElseThrow();
+
+			if (nodeAboveWhile instanceof MethodDeclaration) {
+				numberSurfaceWhiles++;
+			}
+		}
+
+		return numberSurfaceWhiles;
 	}
 
 	/**
@@ -323,23 +311,16 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<DoStmt> doStmts = methodDeclaration.findAll(DoStmt.class);
 
-		for (Statement statement : statements) {
-			List<Node> children = statement.getChildNodes();
+		for (DoStmt doStmt : doStmts) {
+			Node parent = doStmt.getParentNode().orElseThrow();
 
-			for (Node child : children) {
-				if (child instanceof BlockStmt) {
-					List<Node> blockChildren = child.getChildNodes();
+			Node nodeAboveDo = parent.getParentNode().orElseThrow();
 
-					for (Node blockChild : blockChildren) {
-
-						if (blockChild instanceof DoStmt) {
-							numNestedDos++;
-						}
-					}
-				}
-
+			// We say a statement is nested if the node above it is not the method declaration
+			if (!(nodeAboveDo instanceof MethodDeclaration)) {
+				numNestedDos++;
 			}
 		}
 
@@ -359,63 +340,19 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<DoStmt> doStmts = methodDeclaration.findAll(DoStmt.class);
 
-		for (Statement statement : statements) {
-			if (statement instanceof DoStmt) {
+		for (DoStmt doStmt : doStmts) {
+			Node parent = doStmt.getParentNode().orElseThrow();
 
-				DoStmt doStmt = (DoStmt) statement;
+			Node nodeAboveDo = parent.getParentNode().orElseThrow();
 
-				Node parentOfDo = doStmt.getParentNode().get();
-
-				if (parentOfDo instanceof BlockStmt) {
-					Node parentOfBlock = parentOfDo.getParentNode().get();
-
-					if (parentOfBlock instanceof MethodDeclaration) {
-						numberSurfaceDos++;
-					}
-				}
-
+			if (nodeAboveDo instanceof MethodDeclaration) {
+				numberSurfaceDos++;
 			}
 		}
 
 		return numberSurfaceDos;
-	}
-
-	/**
-	 * This method will return the number of surface whiles which are contained
-	 * within in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
-	 * @return The number of surface whiles contained in the source file
-	 */
-	public int numberOfSurfaceWhileIn(String methodName) {
-		int numberSurfaceWhiles = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
-
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
-
-		for (Statement statement : statements) {
-			if (statement instanceof WhileStmt) {
-
-				WhileStmt whileStmt = (WhileStmt) statement;
-
-				Node parentOfWhile = whileStmt.getParentNode().get();
-
-				if (parentOfWhile instanceof BlockStmt) {
-					Node parentOfBlock = parentOfWhile.getParentNode().get();
-
-					if (parentOfBlock instanceof MethodDeclaration) {
-						numberSurfaceWhiles++;
-					}
-				}
-
-			}
-		}
-
-		return numberSurfaceWhiles;
 	}
 
 	/**
@@ -431,27 +368,48 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<ForStmt> forStmts = methodDeclaration.findAll(ForStmt.class);
 
-		for (Statement statement : statements) {
-			List<Node> children = statement.getChildNodes();
+		for (ForStmt forStmt : forStmts) {
+			Node parent = forStmt.getParentNode().orElseThrow();
 
-			for (Node child : children) {
-				if (child instanceof BlockStmt) {
-					List<Node> blockChildren = child.getChildNodes();
+			Node nodeAboveFor = parent.getParentNode().orElseThrow();
 
-					for (Node blockChild : blockChildren) {
-
-						if (blockChild instanceof ForStmt) {
-							numNestedFors++;
-						}
-					}
-				}
-
+			// We say a statement is nested if the node above it is not the method declaration
+			if (!(nodeAboveFor instanceof MethodDeclaration)) {
+				numNestedFors++;
 			}
 		}
 
 		return numNestedFors;
+	}
+
+	/**
+	 * This method will return the number of surface fors which are contained within
+	 * in a given method which is contained within the source file.
+	 *
+	 * @param methodName
+	 *
+	 * @return The number of surface fors contained in the source file
+	 */
+	public int numberOfSurfaceForIn(String methodName) {
+		int numberSurfaceFors = 0;
+
+		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
+
+		List<ForStmt> forStmts = methodDeclaration.findAll(ForStmt.class);
+
+		for (ForStmt forStmt : forStmts) {
+			Node parent = forStmt.getParentNode().orElseThrow();
+
+			Node nodeAboveFor = parent.getParentNode().orElseThrow();
+
+			if (nodeAboveFor instanceof MethodDeclaration) {
+				numberSurfaceFors++;
+			}
+		}
+
+		return numberSurfaceFors;
 	}
 
 	/**
@@ -467,23 +425,16 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<ForEachStmt> forEachStmts = methodDeclaration.findAll(ForEachStmt.class);
 
-		for (Statement statement : statements) {
-			List<Node> children = statement.getChildNodes();
+		for (ForEachStmt forEachStmt : forEachStmts) {
+			Node parent = forEachStmt.getParentNode().orElseThrow();
 
-			for (Node child : children) {
-				if (child instanceof BlockStmt) {
-					List<Node> blockChildren = child.getChildNodes();
+			Node nodeAboveForEach = parent.getParentNode().orElseThrow();
 
-					for (Node blockChild : blockChildren) {
-
-						if (blockChild instanceof ForEachStmt) {
-							numNestedForEach++;
-						}
-					}
-				}
-
+			// We say a statement is nested if the node above it is not the method declaration
+			if (!(nodeAboveForEach instanceof MethodDeclaration)) {
+				numNestedForEach++;
 			}
 		}
 
@@ -504,63 +455,19 @@ public class JPExtractor {
 
 		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
+		List<ForEachStmt> forEachStmts = methodDeclaration.findAll(ForEachStmt.class);
 
-		for (Statement statement : statements) {
-			if (statement instanceof ForEachStmt) {
+		for (ForEachStmt forEachStmt : forEachStmts) {
+			Node parent = forEachStmt.getParentNode().orElseThrow();
 
-				ForEachStmt forEachStmt = (ForEachStmt) statement;
+			Node nodeAboveForEach = parent.getParentNode().orElseThrow();
 
-				Node parentOfForEach = forEachStmt.getParentNode().get();
-
-				if (parentOfForEach instanceof BlockStmt) {
-					Node parentOfBlock = parentOfForEach.getParentNode().get();
-
-					if (parentOfBlock instanceof MethodDeclaration) {
-						numberSurfaceForEach++;
-					}
-				}
-
+			if (nodeAboveForEach instanceof MethodDeclaration) {
+				numberSurfaceForEach++;
 			}
 		}
 
 		return numberSurfaceForEach;
-	}
-
-	/**
-	 * This method will return the number of surface fors which are contained within
-	 * in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
-	 * @return The number of surface fors contained in the source file
-	 */
-	public int numberOfSurfaceForIn(String methodName) {
-		int numberSurfaceFors = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
-
-		List<Statement> statements = methodDeclaration.findAll(Statement.class);
-
-		for (Statement statement : statements) {
-			if (statement instanceof ForStmt) {
-
-				ForStmt forStmt = (ForStmt) statement;
-
-				Node parentOfFor = forStmt.getParentNode().get();
-
-				if (parentOfFor instanceof BlockStmt) {
-					Node parentOfBlock = parentOfFor.getParentNode().get();
-
-					if (parentOfBlock instanceof MethodDeclaration) {
-						numberSurfaceFors++;
-					}
-				}
-
-			}
-		}
-
-		return numberSurfaceFors;
 	}
 
 	/**
@@ -695,5 +602,4 @@ public class JPExtractor {
 
 		return targetMethodDeclaration;
 	}
-
 }
