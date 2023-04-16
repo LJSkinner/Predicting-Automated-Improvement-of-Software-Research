@@ -9,10 +9,12 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.*;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import java.util.NoSuchElementException;
 
 /**
  * This class is a wrapper for JavaParser and is responsible for the main work
@@ -89,13 +91,19 @@ public class JPExtractor {
 	/**
 	 * This method will compute the number of all statements which match the if
 	 * keyword. This will include "else" statements.
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
 	 * 
 	 * @return The number of statements matching the if keyword.
 	 */
-	public int numberOfAllIfIn(String methodName) {
+	public int numberOfAllIfIn(MethodDeclaration methodDeclaration) {
 		int numIfs = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<IfStmt> ifStatements = methodDeclaration.findAll(IfStmt.class);
 
@@ -123,15 +131,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of nested ifs which are contained within
 	 * in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of nested Ifs contained in the source file
 	 */
-	public int numberOfNestedIfIn(String methodName) {
+	public int numberOfNestedIfIn(MethodDeclaration methodDeclaration) {
 		int numNestedIfs = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<IfStmt> ifStmts = methodDeclaration.findAll(IfStmt.class);
 
@@ -159,15 +174,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of surface ifs which are contained within
 	 * in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of surface Ifs contained in the source file
 	 */
-	public int numberOfSurfaceIfIn(String methodName) {
+	public int numberOfSurfaceIfIn(MethodDeclaration methodDeclaration) {
 		int numberSurfaceIfs = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<IfStmt> ifStmts = methodDeclaration.findAll(IfStmt.class);
 
@@ -187,15 +209,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of nested switches which are contained
 	 * within in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of nested switches contained in the source file
 	 */
-	public int numberOfNestedSwitchIn(String methodName) {
+	public int numberOfNestedSwitchIn(MethodDeclaration methodDeclaration) {
 		int numNestedSwitches = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<SwitchStmt> switchStmts = methodDeclaration.findAll(SwitchStmt.class);
 
@@ -216,15 +245,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of surface switches which are contained
 	 * within in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of surface switches contained in the source file
 	 */
-	public int numberOfSurfaceSwitchIn(String methodName) {
+	public int numberOfSurfaceSwitchIn(MethodDeclaration methodDeclaration) {
 		int numberSurfaceSwitches = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<SwitchStmt> switchStmts = methodDeclaration.findAll(SwitchStmt.class);
 
@@ -244,15 +280,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of nested whiles which are contained
 	 * within in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of nested whiles contained in the source file
 	 */
-	public int numberOfNestedWhileIn(String methodName) {
+	public int numberOfNestedWhileIn(MethodDeclaration methodDeclaration) {
 		int numNestedWhiles = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<WhileStmt> whileStmts = methodDeclaration.findAll(WhileStmt.class);
 
@@ -273,15 +316,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of surface whiles which are contained
 	 * within in a given method which is contained within the source file.
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
 	 *
-	 * @param methodName
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
 	 *
 	 * @return The number of surface whiles contained in the source file
 	 */
-	public int numberOfSurfaceWhileIn(String methodName) {
+	public int numberOfSurfaceWhileIn(MethodDeclaration methodDeclaration) {
 		int numberSurfaceWhiles = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<WhileStmt> whileStmts = methodDeclaration.findAll(WhileStmt.class);
 
@@ -301,15 +351,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of nested dos which are contained within
 	 * in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of nested dos contained in the source file
 	 */
-	public int numberOfNestedDoIn(String methodName) {
+	public int numberOfNestedDoIn(MethodDeclaration methodDeclaration) {
 		int numNestedDos = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<DoStmt> doStmts = methodDeclaration.findAll(DoStmt.class);
 
@@ -330,15 +387,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of surface dos which are contained within
 	 * in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of surface dos contained in the source file
 	 */
-	public int numberOfSurfaceDoIn(String methodName) {
+	public int numberOfSurfaceDoIn(MethodDeclaration methodDeclaration) {
 		int numberSurfaceDos = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<DoStmt> doStmts = methodDeclaration.findAll(DoStmt.class);
 
@@ -358,15 +422,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of nested fors which are contained within
 	 * in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of nested fors contained in the source file
 	 */
-	public int numberOfNestedForIn(String methodName) {
+	public int numberOfNestedForIn(MethodDeclaration methodDeclaration) {
 		int numNestedFors = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<ForStmt> forStmts = methodDeclaration.findAll(ForStmt.class);
 
@@ -387,15 +458,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of surface fors which are contained within
 	 * in a given method which is contained within the source file.
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
 	 *
-	 * @param methodName
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
 	 *
 	 * @return The number of surface fors contained in the source file
 	 */
-	public int numberOfSurfaceForIn(String methodName) {
+	public int numberOfSurfaceForIn(MethodDeclaration methodDeclaration) {
 		int numberSurfaceFors = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<ForStmt> forStmts = methodDeclaration.findAll(ForStmt.class);
 
@@ -415,15 +493,18 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of nested for eaches which are contained
 	 * within in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
 	 * @return The number of nested for eaches contained in the source file
 	 */
-	public int numberOfNestedForEachIn(String methodName) {
+	public int numberOfNestedForEachIn(MethodDeclaration methodDeclaration) {
 		int numNestedForEach = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<ForEachStmt> forEachStmts = methodDeclaration.findAll(ForEachStmt.class);
 
@@ -445,15 +526,22 @@ public class JPExtractor {
 	/**
 	 * This method will return the number of surface for eaches which are contained
 	 * within in a given method which is contained within the source file.
-	 * 
-	 * @param methodName
-	 * 
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @throws NoSuchElementException If the parent node or node above the statement doesn't have a value.
+	 *                                This should only really ever happen if an empty MethodDeclaration node
+	 *                                is passed to the method.
+	 *
 	 * @return The number of surface for eaches contained in the source file
 	 */
-	public int numberOfSurfaceForEachIn(String methodName) {
+	public int numberOfSurfaceForEachIn(MethodDeclaration methodDeclaration) {
 		int numberSurfaceForEach = 0;
-
-		MethodDeclaration methodDeclaration = findMethodDeclarationNode(methodName);
 
 		List<ForEachStmt> forEachStmts = methodDeclaration.findAll(ForEachStmt.class);
 
@@ -581,7 +669,7 @@ public class JPExtractor {
 	 * @return The method declaration node which matches the method name provided,
 	 *         or empty if there is not one.
 	 */
-	private MethodDeclaration findMethodDeclarationNode(String methodName) {
+	public MethodDeclaration findMethodDeclarationNode(String methodName) {
 		MethodDeclaration targetMethodDeclaration = new MethodDeclaration();
 
 		for (MethodDeclaration md : compilationUnit.findAll(MethodDeclaration.class)) {
