@@ -7,6 +7,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.*;
@@ -591,6 +592,38 @@ public class JPExtractor {
 	 */
 	public int numberOfLocalVariablesIn(MethodDeclaration methodDeclaration) {
 		return methodDeclaration.findAll(VariableDeclarationExpr.class).size();
+	}
+
+	/**
+	 * This method will return the number of logical operators in the provided method.
+	 * This will count &&, ||, &, | and ^.
+	 * <p>
+	 * You can use the helper method provided to obtain a Method Declaration node, this should
+	 * work on all fully formed method names.
+	 *
+	 * @param methodDeclaration The method declaration node that represents the method to calculate this metric from.
+	 *
+	 * @see #findMethodDeclarationNode(String)
+	 *
+	 * @return The number of logical operators (&&, ||, &, |, ^) in the provided method
+	 */
+	public int numberOfLogicalOperatorsIn(MethodDeclaration methodDeclaration) {
+		int numLogicalOperators = 0;
+
+		List<BinaryExpr> binaryExprs = methodDeclaration.findAll(BinaryExpr.class);
+
+		for (BinaryExpr binaryExpr : binaryExprs) {
+			boolean isLogicalOperator = binaryExpr.getOperator() == BinaryExpr.Operator.AND ||
+					                    binaryExpr.getOperator() == BinaryExpr.Operator.OR ||
+					                    binaryExpr.getOperator() == BinaryExpr.Operator.XOR ||
+					                    binaryExpr.getOperator() == BinaryExpr.Operator.BINARY_AND ||
+					                    binaryExpr.getOperator() == BinaryExpr.Operator.BINARY_OR;
+			if (isLogicalOperator) {
+				numLogicalOperators++;
+			}
+		}
+
+		return numLogicalOperators;
 	}
 
 	/**
