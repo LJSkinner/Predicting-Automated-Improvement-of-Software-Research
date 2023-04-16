@@ -19,8 +19,11 @@ import org.tinylog.Logger;
 /**
  * This class is responsible for utilising the JavaParser metric extractor and
  * running it over open source projects which have been used in Gin.
- * 
- * 
+ * <p>
+ *
+ * This is intended to be a very thrown together, quick and dirty way of getting the metrics
+ * in a working CSV file. 
+ *
  * @author Luke Skinner
  *
  */
