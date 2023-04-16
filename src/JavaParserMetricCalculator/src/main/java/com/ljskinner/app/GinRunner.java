@@ -72,7 +72,9 @@ public class GinRunner {
 			// Header line
 			outFile.println("method," + "surfaceIfs,nestedIfs," + "surfaceSwitches,nestedSwitches,"
 					+ "surfaceFors,nestedFors," + "surfaceForEachs,nestedForEachs," + "surfaceWhiles,nestedWhiles,"
-					+ "surfaceDos,nestedDos," + "iterativeStmts,conditionalStmts");
+					+ "surfaceDos,nestedDos," + "iterativeStmts,conditionalStmts,"
+					+ "numMethodCalls,numLocalVariables," + "numLogicalOperators,numComparisonOperators,"
+					+ "numNumericalOperators");
 
 			for (String method : methods) {
 				Logger.info("Processing method {}", method);
@@ -89,9 +91,10 @@ public class GinRunner {
 
 				Logger.info("Writing metrics to file...");
 
-				outFile.printf("\"%s\",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n", method, metrics[0], metrics[1],
+				outFile.printf("\"%s\",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n", method, metrics[0], metrics[1],
 						metrics[2], metrics[3], metrics[4], metrics[5], metrics[6], metrics[7], metrics[8], metrics[9],
-						metrics[10], metrics[11], metrics[12], metrics[13]);
+						metrics[10], metrics[11], metrics[12], metrics[13], metrics[14], metrics[15], metrics[16],
+						metrics[17], metrics[18]);
 			}
 		}
 	}
@@ -134,9 +137,19 @@ public class GinRunner {
 
 		int conditionalStmts = surfaceIfs + nestedIfs + surfaceSwitches + nestedSwitches;
 
+		int numMethodCalls = jpExtractor.numberOfMethodCallsIn(currentMethodDeclarationNode);
+
+		int numLocalVariables = jpExtractor.numberOfLocalVariablesIn(currentMethodDeclarationNode);
+
+		int numLogicalOperators = jpExtractor.numberOfLogicalOperatorsIn(currentMethodDeclarationNode);
+
+		int numComparisonOperators = jpExtractor.numberOfComparisonOperatorsIn(currentMethodDeclarationNode);
+
+		int numNumericalOperators = jpExtractor.numberOfNumericalOperatorsIn(currentMethodDeclarationNode);
+
 		return new int[] { surfaceIfs, nestedIfs, surfaceSwitches, nestedSwitches, surfaceFors, nestedFors,
 				surfaceForEachs, nestedForEachs, surfaceWhiles, nestedWhiles, surfaceDos, nestedDos, iterativeStmts,
-				conditionalStmts };
+				conditionalStmts, numMethodCalls, numLocalVariables, numLogicalOperators, numComparisonOperators, numNumericalOperators};
 	}
 
 	private static int getProjectIndex(String method) {
