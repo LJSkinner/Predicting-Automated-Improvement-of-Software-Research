@@ -628,7 +628,7 @@ public class JPExtractor {
 
 	/**
 	 * This method will return the number of comparison operators in the provided method.
-	 * This will count >, >=, <, <= and ==.
+	 * This will count >, >=, <, <=, == and !=.
 	 * <p>
 	 * You can use the helper method provided to obtain a Method Declaration node, this should
 	 * work on all fully formed method names.
@@ -637,7 +637,7 @@ public class JPExtractor {
 	 *
 	 * @see #findMethodDeclarationNode(String)
 	 *
-	 * @return The number of comparison operators (>, >=, <, <=, ==) in the provided method
+	 * @return The number of comparison operators (>, >=, <, <=, ==, !=) in the provided method
 	 */
 	public int numberOfComparisonOperatorsIn(MethodDeclaration methodDeclaration) {
 		int numComparisonOperators = 0;
@@ -649,7 +649,8 @@ public class JPExtractor {
 					                       binaryExpr.getOperator() == BinaryExpr.Operator.GREATER_EQUALS ||
 					                       binaryExpr.getOperator() == BinaryExpr.Operator.LESS ||
 					                       binaryExpr.getOperator() == BinaryExpr.Operator.LESS_EQUALS ||
-					                       binaryExpr.getOperator() == BinaryExpr.Operator.EQUALS;
+					                       binaryExpr.getOperator() == BinaryExpr.Operator.EQUALS ||
+					                       binaryExpr.getOperator() == BinaryExpr.Operator.NOT_EQUALS;
 
 			if(isComparisonOperator) {
 				numComparisonOperators++;
